@@ -4,7 +4,6 @@
 
 ![video](images/demo.gif)
 
-[Este video](https://www.youtube.com/watch?v=Nehk4tBxD4o) es una introducción complementaria bastante recomendable.
 
 ## Creación de la aplicación con routing
 
@@ -13,6 +12,8 @@ La aplicación se debe crear indicando que queremos agregar el framework de rute
 ```bash
 $  ng new eg-tareas-routing-angular --routing
 ```
+
+[Este video](https://www.youtube.com/watch?v=Nehk4tBxD4o) es una introducción complementaria bastante recomendable.
 
 ## Componentes
 
