@@ -250,3 +250,133 @@ La vista muestra el id en un input no editable, la descripción de la tarea (con
 
 # Testing
 
+Dado que el test del servicio es el _default_ que genera Angular, nos concentraremos en contar los tests de la lista de tareas y de su edición.
+
+## Lista de tareas
+
+Para la lista de tareas, debemos configurar todos los imports que tiene la vista y esto incluye ahora el ruteo de la aplicación:
+
+```typescript
+describe('ListaTareasComponent', () => {
+  let component: ListaTareasComponent
+  let fixture: ComponentFixture<ListaTareasComponent>
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [
+        ListaTareasComponent,
+        routingComponents
+      ],
+      imports: [
+        FormsModule,
+        RouterModule.forRoot(routes)
+      ],
+      providers: [
+        { provide: APP_BASE_HREF, useValue: '/' }
+      ]
+    })
+    .compileComponents()
+  }))
+```
+
+- para poder navegar a la pantalla principal, debemos proveer el _path_ hacia '/' que equivale a ir a la vista Lista de Tareas, esto es lo que hace la propiedad APP_BASE_HREF = '/' en la configuración providers.
+- también debemos copiar los routingComponents en nuestras _declarations_ 
+- y el import de las rutas definidas para el RouterModule (por eso debemos exportar la constante _routes_ desde el archivo _app-routing.module_)
+
+Los tests específicos que creamos son dos:
+
+- cuando la vista comienza no tenemos tareas cargadas (componente que delega la búsqueda de tareas al service)
+- cuando agregamos una nueva tarea, esa tarea se visualiza en la tabla HTML de tareas; esto implica escribir en el input el valor, presionar el botón "+" y buscar un tag td que tenga la descripción
+
+```typescript
+  it('should contain no tasks initially', () => {
+    expect(component.tareas.length).toEqual(0)
+  })
+  it('when adding a new task it should appear in tasks table', () => {
+    component.descripcionTarea = "Testing Angular"
+    component.agregarTarea()
+    fixture.detectChanges()
+    const compiled = fixture.debugElement.nativeElement
+    expect(compiled.querySelector('#desc0').textContent).toContain('Testing Angular')
+  })
+```
+
+Para facilitar el test, modificamos la vista para que el id de la segunda columna de cada tarea se forme con el prefijo "desc" + el identificador de la tarea:
+
+```html
+<tr *ngFor="let tarea of tareas">
+    <td>
+        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
+    </td>
+    <td>
+        <a [routerLink]="['/editarTarea', tarea.id]" id="desc{{tarea.id}}">{{tarea.descripcion}}</a>
+    </td>
+```
+
+Esto permite buscar en el HTML resultante un tag cuyo id sea "desc0".
+
+## Editar Tarea
+
+Este test necesita simular la edición de una tarea. Como nuestro service no tiene ninguna tarea en su colección, creamos un StubTareaService que genera dos tareas.
+
+```typescript
+providers: [
+  ...,
+  { provide: TareaService, useValue: new StubTareaService() }
+```
+
+El StubTareaService simplemente hereda del TareaService y define su lista de tareas:
+
+```typescript
+@Injectable({
+  providedIn: 'root'
+})
+export class StubTareaService extends TareaService {
+  constructor() {
+    super()
+    this.tareas = [ this.crearTarea("Aprender Angular"), this.crearTarea("Aprender Routing de Angular"), this.crearTarea("Desarrollar app en Angular")]
+  }
+}
+```
+
+También debemos simular que el usuario navegó para editar el segundo elemento, es decir que viene de la página principal y al hacer click sobre la segunda tarea esto disparó el siguiente link:
+
+http://localhost:4200/editarTarea/1
+
+Para hacer eso _mockeamos_ el objeto ActivatedRoute para que cuando preguntemos qué parámetro vino nos conteste 1:
+
+```typescript
+providers: [
+  ...,
+  {
+    provide: ActivatedRoute,
+    useValue: {
+      params: {
+        subscribe: (fn: (value: Data) => void) => fn({
+          id: 1
+        })
+      }
+    }
+  },
+```
+
+Al igual que hicimos para la lista de tareas el path default de nuestra aplicación con "/":
+
+```typescript
+      providers: [
+        { provide: APP_BASE_HREF, useValue: '/' },
+        ...
+```
+
+e inyectamos las rutas y los componentes de la misma manera (el lector puede ver el archivo [editar-tarea.component.spec](./editar-tarea/editar-tarea.component.spec)).
+
+El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService:
+
+```typescript
+  it('should show task description for id 1', () => {
+    const compiled = fixture.debugElement.nativeElement
+    fixture.whenStable().then(() => {
+      expect(compiled.querySelector('#descripcionTarea').value).toContain('Aprender Routing de Angular')
+    }) 
+  })
+```

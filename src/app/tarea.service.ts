@@ -39,11 +39,4 @@ export class StubTareaService extends TareaService {
     super()
     this.tareas = [ this.crearTarea("Aprender Angular"), this.crearTarea("Aprender Routing de Angular"), this.crearTarea("Desarrollar app en Angular")]
   }
-
-  crearTarea(descripcion: string) : Tarea {
-    const tarea = new Tarea(descripcion)
-    tarea.id = this.tareasIds
-    this.tareasIds++
-    return tarea
-  }
 }
