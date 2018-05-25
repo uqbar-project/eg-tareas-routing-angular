@@ -1,5 +1,9 @@
 # Tareas (Routing con Angular)
 
+[![Build Status](https://travis-ci.org/uqbar-project/eg-tareas-routing-angular.svg?branch=master)](https://travis-ci.org/uqbar-project/eg-tareas-routing-angular)
+
+![video](images/demo.gif)
+
 [Este video](https://www.youtube.com/watch?v=Nehk4tBxD4o) es una introducción complementaria bastante recomendable.
 
 ## Creación de la aplicación con routing
