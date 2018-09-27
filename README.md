@@ -25,12 +25,12 @@ $ ng g c editarTarea -is
 
 La explicación de los modificadores para el comando ng son:
 
-- g es por generate, 
-- c es por component, 
-- is es por inline style, de manera de no crear un archivo css específico
-- también existe la configuración it, para no generar un html sino embeberlo dentro del archivo typescript, pero dado que la vista va a tener varias líneas no es algo recomendable.
+- `g` es por generate, 
+- `c` es por component, 
+- `-is` es por inline style, de manera de no crear un archivo css específico
+- también existe la configuración `-it`, para no generar un html sino embeberlo dentro del archivo typescript, pero dado que la vista va a tener varias líneas no es algo recomendable.
 
-Hacmemos lo propio con el componente que lista (y agrega) tareas:
+Hacemos lo propio con el componente que lista (y agrega) tareas:
 
 ```bash
 $ ng g c listaTareas -is
@@ -298,11 +298,12 @@ Los tests específicos que creamos son dos:
     expect(component.tareas.length).toEqual(0)
   })
   it('when adding a new task it should appear in tasks table', () => {
-    component.descripcionTarea = "Testing Angular"
+    const testingAngularDescription = 'Testing Angular'
+    component.descripcionTarea = testingAngularDescription
     component.agregarTarea()
     fixture.detectChanges()
     const compiled = fixture.debugElement.nativeElement
-    expect(compiled.querySelector('#desc0').textContent).toContain('Testing Angular')
+    expect(compiled.querySelector('#desc0').textContent).toContain(testingAngularDescription)
   })
 ```
 

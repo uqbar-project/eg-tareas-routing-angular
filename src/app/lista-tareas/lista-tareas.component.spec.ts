@@ -39,10 +39,11 @@ describe('ListaTareasComponent', () => {
     expect(component.tareas.length).toEqual(0)
   })
   it('when adding a new task it should appear in tasks table', () => {
-    component.descripcionTarea = "Testing Angular"
+    const testingAngularDescription = 'Testing Angular'
+    component.descripcionTarea = testingAngularDescription
     component.agregarTarea()
     fixture.detectChanges()
     const compiled = fixture.debugElement.nativeElement
-    expect(compiled.querySelector('#desc0').textContent).toContain('Testing Angular')
+    expect(compiled.querySelector('#desc0').textContent).toContain(testingAngularDescription)
   })
 })
