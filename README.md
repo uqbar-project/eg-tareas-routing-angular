@@ -41,7 +41,7 @@ $ ng g c listaTareas -is
 Agregaremos la dependencia a Material Design for Bootstrap de la siguiente manera:
 
 ```bash
-$ npm install mdbootstrap --save
+$ npm install mdbootstrap
 ```
 
 # Definición de las rutas de la aplicación
@@ -63,7 +63,7 @@ const routes: Routes = [
 ]
 ```
 
-El módulo importa las rutas que acabamos de definir...
+El módulo (definido en el mismo archivo _app-routing.module.ts_) importa las rutas que acabamos de definir...
 
 ```typescript
 @NgModule({
@@ -106,7 +106,10 @@ El componente que lista las tareas tiene
 - un texto + un botón para dar de alta una tarea
 - una tabla que muestra las tareas existentes
 
-La lista de tareas se mapea directamente contra la propiedad tareas del service. Para dar de alta una tarea se delega también dicha responsabilidad al service:
+La lista de tareas se mapea directamente contra la propiedad tareas del service. Para dar de alta una tarea
+
+- el componente guarda en una variable específica el valor del texto (descripcionTarea), que se blanquea una vez creada la tarea
+- la creación se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app
 
 ```typescript
 export class ListaTareasComponent implements OnInit {
@@ -123,6 +126,19 @@ export class ListaTareasComponent implements OnInit {
     this.tareaService.agregarTarea(tarea)
     this.descripcionTarea = ''
   }
+```
+
+La sintaxis
+
+```typescript
+  constructor(private tareaService : TareaService) {
+```
+
+permite definir una variable de instancia tareaService que es privada del componente. Luego se puede acceder en cualquier método, como vemos en agregarTarea():
+
+```typescript
+  agregarTarea() {
+    const tarea = this.tareaService.crearTarea...
 ```
 
 ## Servicio DAO de Tareas
