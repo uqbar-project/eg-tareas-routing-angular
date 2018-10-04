@@ -99,17 +99,41 @@ import { AppComponent } from './app.component'
 
 # Lista de tareas
 
+## Vista
+
+La vista tiene un binding bidireccional para cargar la descripción de la tarea en un _buffer_ intermedio antes de crear la tarea:
+
+```html
+<input [(ngModel)]="descripcionTarea" name="descripcionTarea" class="col-md-9" type="text" placeholder="Descripcion de la tarea">
+```
+
+También el botón tiene un binding del evento click para disparar el alta de una tarea:
+
+```html
+<button type="submit" class="btn btn-indigo" (click)="agregarTarea()">
+```
+
+Y por último, la tabla además de mostrar id y descripción de cada tarea dispara la edición mediante la propiedad _routerLink_:
+
+```html
+<tr *ngFor="let tarea of tareas">
+    <td>
+        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
+    </td>
+    <td>
+        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.descripcion}}</a>
+    </td>
+</tr>
+```
+
+- las directivas especiales de Angular tienen el prefijo *, como en ngFor
+- el binding de la propiedad routerLink se hace al path "/editarTarea". Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path "listarTareas/editarTarea". Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
+- por último con el moustache `{{ }}` se interpola el resultado del código tarea.id dentro del valor del tag a que estamos definiendo
+
+
 ## Componente
 
-El componente que lista las tareas tiene
-
-- un texto + un botón para dar de alta una tarea
-- una tabla que muestra las tareas existentes
-
-La lista de tareas se mapea directamente contra la propiedad tareas del service. Para dar de alta una tarea
-
-- el componente guarda en una variable específica el valor del texto (descripcionTarea), que se blanquea una vez creada la tarea
-- la creación se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app
+La lista de tareas se mapea directamente contra la propiedad tareas del service. El alta una tarea se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app.
 
 ```typescript
 export class ListaTareasComponent implements OnInit {
@@ -178,36 +202,6 @@ export class TareaService {
 
 No hay nada interesante para contar, una tarea agrupa un identificador y su descripción.
 
-## Vista
-
-La vista tiene un binding bidireccional para cargar la descripción de la tarea en un _buffer_ intermedio antes de crear la tarea:
-
-```html
-<input [(ngModel)]="descripcionTarea" name="descripcionTarea" class="col-md-9" type="text" placeholder="Descripcion de la tarea">
-```
-
-También el botón tiene un binding del evento click para disparar el alta de una tarea:
-
-```html
-<button type="submit" class="btn btn-indigo" (click)="agregarTarea()">
-```
-
-Y por último, la tabla además de mostrar id y descripción de cada tarea dispara la edición mediante la propiedad _routerLink_:
-
-```html
-<tr *ngFor="let tarea of tareas">
-    <td>
-        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
-    </td>
-    <td>
-        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.descripcion}}</a>
-    </td>
-</tr>
-```
-
-- las directivas especiales de Angular tienen el prefijo *, como en ngFor
-- el binding de la propiedad routerLink se hace al path "/editarTarea". Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path "listarTareas/editarTarea". Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
-- por último con el moustache `{{ }}` se interpola el resultado del código tarea.id dentro del valor del tag a que estamos definiendo
 
 # Editar tarea
 
