@@ -72,7 +72,7 @@ Una vez hecho esto, modificamos el `package.json` para que corra los scripts de 
 {
   "name": "eg-tareas-routing-angular",
   "version": "0.0.0",
-  "main": "main.js",  <-- main de electron
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -80,11 +80,16 @@ Una vez hecho esto, modificamos el `package.json` para que corra los scripts de 
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    <-- builds de electron -->
     "electron": "electron .",
     "electron-build": "ng build --prod && electron ."
   },
 ```
+
+Los valores a actualizar son:
+
+- main
+- electron
+- electron-build
 
 Un detalle muy importante es que en el archivo `index.html` que se ubica dentro de la carpeta `src` hay que modificar el href base, agregándole un punto `./` en lugar de `/`:
 
