@@ -27,6 +27,7 @@ describe('EditarTareaComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             params: {
+              // TODO: Mejorar esto
               subscribe: (fn: (value: Data) => void) => fn({
                 id: 1
               })

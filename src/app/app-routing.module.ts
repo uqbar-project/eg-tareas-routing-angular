@@ -4,9 +4,9 @@ import { ListaTareasComponent } from './lista-tareas/lista-tareas.component'
 import { EditarTareaComponent } from './editar-tarea/editar-tarea.component'
 
 export const routes: Routes = [
-  { path: '',                redirectTo: '/listaTareas', pathMatch: 'full' },
   { path: 'listaTareas',     component: ListaTareasComponent },
-  { path: 'editarTarea/:id', component: EditarTareaComponent}
+  { path: 'editarTarea/:id', component: EditarTareaComponent},
+  { path: '**',              redirectTo: '/listaTareas', pathMatch: 'full' },
 ]
 
 @NgModule({

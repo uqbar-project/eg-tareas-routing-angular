@@ -15,7 +15,6 @@ export class EditarTareaComponent implements OnInit {
   descripcionTarea : string
 
   constructor(private tareaService: TareaService, private router : Router, private route : ActivatedRoute) {
-    this.router = router
     this.route.params.subscribe(params => {
       this.tarea = this.tareaService.getTareaById(params['id'])
       if (!this.tarea) {
