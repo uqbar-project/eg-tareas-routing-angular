@@ -72,7 +72,7 @@ Una vez hecho esto, modificamos el `package.json` para que corra los scripts de 
 {
   "name": "eg-tareas-routing-angular",
   "version": "0.0.0",
-  "main": "main.js",  // main de electron
+  "main": "main.js",  <-- main de electron
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -80,10 +80,9 @@ Una vez hecho esto, modificamos el `package.json` para que corra los scripts de 
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    // builds de electron
+    <-- builds de electron -->
     "electron": "electron .",
     "electron-build": "ng build --prod && electron ."
-    //
   },
 ```
 
