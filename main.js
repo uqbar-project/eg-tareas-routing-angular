@@ -1,0 +1,49 @@
+const { app, BrowserWindow } = require('electron')
+const url = require("url");
+const path = require("path");
+
+let win;
+
+function createWindow () {
+  // Create the browser window.
+  win = new BrowserWindow({
+    width: 600, 
+    height: 600,
+    backgroundColor: '#ffffff',
+  })
+
+
+  console.log("dirname", __dirname)
+
+  win.loadURL(
+    url.format({
+      pathname: path.join(__dirname, `/dist/eg-tareas-routing-angular/index.html`),
+      protocol: "file:",
+      slashes: true
+    })
+  )
+
+  // Event when the window is closed.
+  win.on('closed', function () {
+    win = null
+  })
+}
+
+// Create window on electron intialization
+app.on('ready', createWindow)
+
+// Quit when all windows are closed.
+app.on('window-all-closed', function () {
+
+  // On macOS specific close process
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', function () {
+  // macOS specific close process
+  if (win === null) {
+    createWindow()
+  }
+})
