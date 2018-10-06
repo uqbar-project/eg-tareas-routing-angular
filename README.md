@@ -4,9 +4,15 @@
 
 # Versión con Electron JS
 
-Este branch permite ver la misma app en un entorno de escritorio del sistema operativo que vos tengas, siguiendo [estos pasos](https://angularfirebase.com/lessons/desktop-apps-with-electron-and-angular/).
+Este branch permite ver la misma app en un entorno de escritorio del sistema operativo que vos tengas, siguiendo [estos pasos](https://angularfirebase.com/lessons/desktop-apps-with-electron-and-angular/). La tecnología que hace esto posible es [Electron](https://electronjs.org/).
 
 # Cambios necesarios a la aplicación
+
+Primero que nada tenés que agregar electron como dependencia de desarrollo:
+
+```bash
+> npm install electron -D
+```
 
 Crearemos un archivo `main.js` que se ubicará en el directorio raíz (no confundir con `main.ts` que es el que utiliza Angular para levantar su browser). También podríamos haberlo escrito en Typescript, solo que debemos transpilarlo luego y eso requiere un paso adicional.
 
@@ -14,21 +20,18 @@ El archivo `main.js` tiene esta definición
 
 ```js
 const { app, BrowserWindow } = require('electron')
-const url = require("url");
-const path = require("path");
+const url = require("url")
+const path = require("path")
 
-let win;
+let win
 
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 600, 
+    width: 900,
     height: 600,
     backgroundColor: '#ffffff',
   })
-
-
-  console.log("dirname", __dirname)
 
   win.loadURL(
     url.format({

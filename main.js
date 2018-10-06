@@ -1,19 +1,16 @@
 const { app, BrowserWindow } = require('electron')
-const url = require("url");
-const path = require("path");
+const url = require("url")
+const path = require("path")
 
-let win;
+let win
 
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 600, 
+    width: 900, 
     height: 600,
     backgroundColor: '#ffffff',
   })
-
-
-  console.log("dirname", __dirname)
 
   win.loadURL(
     url.format({
