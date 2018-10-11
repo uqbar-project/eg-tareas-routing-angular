@@ -119,4 +119,4 @@ Y por último levantamos la aplicación Electron:
 
 Lo que nos permitirá ver la app desde nuestro sistema operativo:
 
-![video](video/demo.gif)
+![video](video/demo2.gif)
