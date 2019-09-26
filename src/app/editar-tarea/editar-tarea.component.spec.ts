@@ -7,6 +7,10 @@ import { AppRoutingModule, routingComponents, routes } from '../app-routing.modu
 import { EditarTareaComponent } from './editar-tarea.component'
 import { TareaService, StubTareaService } from '../tarea.service'
 
+function subscribe(fn: (value: Data) => void) {
+  fn({ id: 1 })
+}
+
 describe('EditarTareaComponent', () => {
   let component: EditarTareaComponent
   let fixture: ComponentFixture<EditarTareaComponent>
@@ -27,10 +31,7 @@ describe('EditarTareaComponent', () => {
           provide: ActivatedRoute,
           useValue: {
             params: {
-              // TODO: Mejorar esto
-              subscribe: (fn: (value: Data) => void) => fn({
-                id: 1
-              })
+              subscribe,
             }
           }
         },
@@ -53,6 +54,6 @@ describe('EditarTareaComponent', () => {
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
       expect(compiled.querySelector('#descripcionTarea').value).toContain('Aprender Routing de Angular')
-    }) 
+    })
   })
 })

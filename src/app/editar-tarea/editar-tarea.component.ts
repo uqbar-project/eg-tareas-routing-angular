@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core'
 import { TareaService } from '../tarea.service'
-import { Router } from "@angular/router"
+import { Router } from '@angular/router'
 import { ActivatedRoute } from '@angular/router'
 import { Tarea } from '../tarea.domain'
 
@@ -11,20 +11,20 @@ import { Tarea } from '../tarea.domain'
 })
 export class EditarTareaComponent implements OnInit {
 
-  tarea : Tarea
-  descripcionTarea : string
+  tarea: Tarea
+  descripcionTarea: string
 
-  constructor(private tareaService: TareaService, private router : Router, private route : ActivatedRoute) {
+  constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.tarea = this.tareaService.getTareaById(params['id'])
+      this.tarea = this.tareaService.getTareaById(parseInt(params['id'], 10))
       if (!this.tarea) {
         this.navegarAHome()
         return
-      } 
+      }
     })
-    
+
   }
-  
+
   navegarAHome() {
     this.router.navigate(['/listaTareas'])
   }
@@ -37,9 +37,9 @@ export class EditarTareaComponent implements OnInit {
   cancelar() {
     this.navegarAHome()
   }
-  
+
   ngOnInit() {
-    this.descripcionTarea = this.tarea.descripcion   
+    this.descripcionTarea = this.tarea.descripcion
   }
 
 }

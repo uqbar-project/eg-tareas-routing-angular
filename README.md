@@ -2,15 +2,14 @@
 
 [![Build Status](https://travis-ci.org/uqbar-project/eg-tareas-routing-angular.svg?branch=master)](https://travis-ci.org/uqbar-project/eg-tareas-routing-angular)
 
-![video](images/demo.gif)
-
+![video](images/demo2.gif)
 
 ## Creación de la aplicación con routing
 
 La aplicación se debe crear indicando que queremos agregar el framework de ruteo de Angular, de la siguiente manera:
 
 ```bash
-$  ng new eg-tareas-routing-angular --routing
+ng new eg-tareas-routing-angular --routing
 ```
 
 [Este video](https://www.youtube.com/watch?v=Nehk4tBxD4o) es una introducción complementaria bastante recomendable.
@@ -20,20 +19,20 @@ $  ng new eg-tareas-routing-angular --routing
 Los componentes que generamos son el que mostrará la lista de tareas y el que permitirá editar una tarea:
 
 ```bash
-$ ng g c editarTarea -is
+ng g c editarTarea -is
 ```
 
 La explicación de los modificadores para el comando ng son:
 
-- `g` es por generate, 
-- `c` es por component, 
+- `g` es por generate,
+- `c` es por component,
 - `-is` es por inline style, de manera de no crear un archivo css específico
 - también existe la configuración `-it`, para no generar un html sino embeberlo dentro del archivo typescript, pero dado que la vista va a tener varias líneas no es algo recomendable.
 
 Hacemos lo propio con el componente que lista (y agrega) tareas:
 
 ```bash
-$ ng g c listaTareas -is
+ng g c listaTareas -is
 ```
 
 ## Material Design for Bootstrap
@@ -41,7 +40,7 @@ $ ng g c listaTareas -is
 Agregaremos la dependencia a Material Design for Bootstrap de la siguiente manera:
 
 ```bash
-$ npm install mdbootstrap
+npm install mdbootstrap
 ```
 
 # Definición de las rutas de la aplicación
@@ -58,7 +57,7 @@ const routes: Routes = [
   { path: '',                redirectTo: '/listaTareas', pathMatch: 'full' },
        // por defecto redirigimos a lista de tareas
   { path: 'listaTareas',     component: ListaTareasComponent },
-  { path: 'editarTarea/:id', component: EditarTareaComponent} 
+  { path: 'editarTarea/:id', component: EditarTareaComponent}
        // pasamos id dentro de la URL para editar una tarea específica: editarTarea/2, editarTarea/4
 ]
 ```
@@ -130,7 +129,6 @@ Y por último, la tabla además de mostrar id y descripción de cada tarea dispa
 - el binding de la propiedad routerLink se hace al path "/editarTarea". Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path "listarTareas/editarTarea". Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
 - por último con el moustache `{{ }}` se interpola el resultado del código tarea.id dentro del valor del tag a que estamos definiendo
 
-
 ## Componente
 
 La lista de tareas se mapea directamente contra la propiedad tareas del service. El alta una tarea se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app.
@@ -179,19 +177,19 @@ export class TareaService {
     this.tareas = []
   }
 
-  crearTarea(description) {
-    let tarea = new Tarea(description)
+  crearTarea(description: string) {
+    const tarea = new Tarea(description)
     tarea.id = this.tareasIds++
     return tarea
   }
 
-  agregarTarea(tarea) {
+  agregarTarea(tarea: Tarea) {
     this.tareas.push(tarea)
   }
 
-  getTareaById(id) {
+  getTareaById(id: number) {
     return this.tareas.find((tarea) => {
-      return tarea.id == id
+      return tarea.id === id
     })
   }
 
@@ -202,12 +200,11 @@ export class TareaService {
 
 No hay nada interesante para contar, una tarea agrupa un identificador y su descripción.
 
-
 # Editar tarea
 
 ## Componente
 
-La ruta http://localhost:4200/editarTarea/1 recibe dentro del path el parámetro con el identificador de la tarea, que se convierte a un objeto Tarea gracias al servicio:
+La ruta [http://localhost:4200/editarTarea/1](http://localhost:4200/editarTarea/1) recibe dentro del path el parámetro con el identificador de la tarea, que se convierte a un objeto Tarea gracias al servicio:
 
 ```typescript
 export class EditarTareaComponent implements OnInit {
@@ -216,13 +213,10 @@ export class EditarTareaComponent implements OnInit {
   descripcionTarea : string
 
   constructor(private tareaService: TareaService, private router : Router, private route : ActivatedRoute) {
-    this.router = router
-    
     this.route.params.subscribe(params => {
       this.tarea = this.tareaService.getTareaById(params['id'])
       ...
     })
-    
   }
 ```
 
@@ -295,7 +289,7 @@ describe('ListaTareasComponent', () => {
 ```
 
 - para poder navegar a la pantalla principal, debemos proveer el _path_ hacia '/' que equivale a ir a la vista Lista de Tareas, esto es lo que hace la propiedad APP_BASE_HREF = '/' en la configuración providers.
-- también debemos copiar los routingComponents en nuestras _declarations_ 
+- también debemos copiar los routingComponents en nuestras _declarations_
 - y el import de las rutas definidas para el RouterModule (por eso debemos exportar la constante _routes_ desde el archivo _app-routing.module_)
 
 Los tests específicos que creamos son dos:
@@ -350,16 +344,70 @@ El StubTareaService simplemente hereda del TareaService y define su lista de tar
 export class StubTareaService extends TareaService {
   constructor() {
     super()
-    this.tareas = [ this.crearTarea("Aprender Angular"), this.crearTarea("Aprender Routing de Angular"), this.crearTarea("Desarrollar app en Angular")]
+    this.tareas = [
+      this.crearTarea('Aprender Angular'),
+      this.crearTarea('Aprender Routing de Angular'),
+      this.crearTarea('Desarrollar app en Angular'),
+    ]
   }
 }
 ```
 
 También debemos simular que el usuario navegó para editar el segundo elemento, es decir que viene de la página principal y al hacer click sobre la segunda tarea esto disparó el siguiente link:
 
-http://localhost:4200/editarTarea/1
+[http://localhost:4200/editarTarea/1](http://localhost:4200/editarTarea/1)
 
-Para hacer eso _mockeamos_ el objeto ActivatedRoute para que cuando preguntemos qué parámetro vino nos conteste 1:
+Tenemos que _mockear_ el objeto ActivatedRoute para que cuando preguntemos qué parámetro vino nos conteste 1.
+
+## Algo de funciones
+
+Definimos una función subscribe:
+
+```ts
+function subscribe(fn: (value: Data) => void) {
+  fn({ id: 1 })
+}
+```
+
+- subscribe recibe como parámetro una función, que recibe un valor y no devuelve nada (`void`)
+- lo que hace es aplicar la función que recibimos como parámetro pasándole un objeto, que tiene un atributo `id` cuyo valor es 1
+
+Esta definición es equivalente a hacer:
+
+```ts
+const subscribe = (fn: (value: Data) => void) {
+  fn({ id: 1})
+}
+```
+
+solo que estamos usando la notación de [**lambdas / arrows functions** de javascript](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions).
+
+Utilizando la sintaxis de lambdas podemos hacer lo mismo en un navegador:
+
+```js
+const saludar = (persona) => 'Hola ' + persona
+      // definimos saludar como una fn
+saludar
+      // es una función
+saludar('Rodri')
+      // la invocamos, el equivalente a apply
+```
+
+![función saludar](images/function.gif)
+
+De la misma manera podemos construir una función, como un bloque:
+
+```ts
+const sumar = () => 1 + 1
+sumar                       // es la función
+sumar()                     // la invocamos -> devuelve 2
+```
+
+Relacionado, pueden ver [este artículo sobre Lambdas en Java 8](http://wiki.uqbar.org/wiki/articles/lambdas-en-java-8.html).
+
+## Simulando la edición de la segunda tarea
+
+Ahora sí, podemos pasarle una función a la ruta para que simule ir a la segunda tarea. Para eso le pasamos la función que acabamos de crear:
 
 ```typescript
 providers: [
@@ -368,9 +416,40 @@ providers: [
     provide: ActivatedRoute,
     useValue: {
       params: {
-        subscribe: (fn: (value: Data) => void) => fn({
-          id: 1
-        })
+        subscribe: subscribe,
+      }
+    }
+  },
+```
+
+A partir de ES6, si queremos definir un objeto de la siguiente manera:
+
+```js
+const nombreCientifico = 'Prunus persica'
+const durazno = {
+  nombreCientifico: nombreCientifico,
+}
+```
+
+también se puede escribir de la siguiente manera:
+
+```js
+const nombreCientifico = 'Prunus persica'
+const durazno = {
+  nombreCientifico,
+}
+```
+
+Por lo tanto nuestro código queda:
+
+```typescript
+providers: [
+  ...,
+  {
+    provide: ActivatedRoute,
+    useValue: {
+      params: {
+        subscribe,
       }
     }
   },
@@ -393,6 +472,6 @@ El test más importante es el que prueba que en el input se visualiza la descrip
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
       expect(compiled.querySelector('#descripcionTarea').value).toContain('Aprender Routing de Angular')
-    }) 
+    })
   })
 ```
