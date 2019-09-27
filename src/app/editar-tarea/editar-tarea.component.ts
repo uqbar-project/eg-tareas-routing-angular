@@ -19,7 +19,6 @@ export class EditarTareaComponent implements OnInit {
       this.tarea = this.tareaService.getTareaById(params['id'])
       if (!this.tarea) {
         this.navegarAHome()
-        // return
       }
     })
 
