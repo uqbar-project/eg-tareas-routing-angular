@@ -12,11 +12,11 @@ import { Tarea } from '../tarea.domain'
 
 export class ListaTareasComponent implements OnInit {
 
-  descripcionTarea : string = ""
-  tareas : Array<Tarea>
-  tareaSeleccionada : Tarea
-  
-  constructor(private tareaService : TareaService) {
+  descripcionTarea = ''
+  tareas: Tarea[]
+  tareaSeleccionada: Tarea
+
+  constructor(private tareaService: TareaService) {
     this.tareas = this.tareaService.tareas
   }
 
@@ -26,6 +26,6 @@ export class ListaTareasComponent implements OnInit {
     this.descripcionTarea = ''
   }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
 }

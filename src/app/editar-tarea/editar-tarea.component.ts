@@ -16,10 +16,10 @@ export class EditarTareaComponent implements OnInit {
 
   constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {
     this.route.params.subscribe(params => {
-      this.tarea = this.tareaService.getTareaById(parseInt(params['id'], 10))
+      this.tarea = this.tareaService.getTareaById(params['id'])
       if (!this.tarea) {
         this.navegarAHome()
-        return
+        // return
       }
     })
 

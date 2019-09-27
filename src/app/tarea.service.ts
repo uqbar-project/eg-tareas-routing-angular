@@ -6,7 +6,7 @@ import { Tarea } from './tarea.domain'
 })
 export class TareaService {
   tareasIds: number
-  tareas: Array<Tarea>
+  tareas: Tarea[]
 
   constructor() {
     this.tareasIds = 0
@@ -25,7 +25,8 @@ export class TareaService {
 
   getTareaById(id: number) {
     return this.tareas.find((tarea) => {
-      return tarea.id === id
+      // tslint:disable-next-line: triple-equals
+      return tarea.id == id
     })
   }
 
