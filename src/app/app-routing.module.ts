@@ -4,9 +4,9 @@ import { ListaTareasComponent } from './lista-tareas/lista-tareas.component'
 import { EditarTareaComponent } from './editar-tarea/editar-tarea.component'
 
 export const routes: Routes = [
-  { path: 'listaTareas',     component: ListaTareasComponent },
-  { path: 'editarTarea/:id', component: EditarTareaComponent},
-  { path: '**',              redirectTo: '/listaTareas', pathMatch: 'full' },
+  { path: 'listaTareas', component: ListaTareasComponent },
+  { path: 'editarTarea/:id', component: EditarTareaComponent },
+  { path: '**', redirectTo: '/listaTareas', pathMatch: 'full' },
 ]
 
 @NgModule({
@@ -14,4 +14,7 @@ export const routes: Routes = [
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
-export const routingComponents = [ ListaTareasComponent, EditarTareaComponent ]
+export const routingComponents = [
+  ListaTareasComponent,
+  EditarTareaComponent
+]

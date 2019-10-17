@@ -6,25 +6,26 @@ import { Tarea } from './tarea.domain'
 })
 export class TareaService {
   tareasIds: number
-  tareas: Array<Tarea>
+  tareas: Tarea[]
 
   constructor() {
     this.tareasIds = 0
     this.tareas = []
   }
 
-  crearTarea(description) {
-    let tarea = new Tarea(description)
+  crearTarea(description: string) {
+    const tarea = new Tarea(description)
     tarea.id = this.tareasIds++
     return tarea
   }
 
-  agregarTarea(tarea) {
+  agregarTarea(tarea: Tarea) {
     this.tareas.push(tarea)
   }
 
-  getTareaById(id) {
+  getTareaById(id: number) {
     return this.tareas.find((tarea) => {
+      // tslint:disable-next-line: triple-equals
       return tarea.id == id
     })
   }
@@ -37,6 +38,10 @@ export class TareaService {
 export class StubTareaService extends TareaService {
   constructor() {
     super()
-    this.tareas = [ this.crearTarea("Aprender Angular"), this.crearTarea("Aprender Routing de Angular"), this.crearTarea("Desarrollar app en Angular")]
+    this.tareas = [
+      this.crearTarea('Aprender Angular'),
+      this.crearTarea('Aprender Routing de Angular'),
+      this.crearTarea('Desarrollar app en Angular')
+    ]
   }
 }

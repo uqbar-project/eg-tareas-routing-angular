@@ -108,15 +108,20 @@ Un detalle muy importante es que en el archivo `index.html` que se ubica dentro 
 Luego hacemos el build del proyecto, lo que genera la carpeta `dist`:
 
 ```bash
-> ng build --prod
+ng build --prod
 ```
 
 Y por último levantamos la aplicación Electron:
 
 ```bash
-> npm run electron-build
+npm run electron-build
 ```
 
 Lo que nos permitirá ver la app desde nuestro sistema operativo:
 
 ![video](video/demo2.gif)
+
+## Material de lectura
+
+- [Progressive Web Applications y Electron](https://felixrieseberg.com/progressive-web-apps-electron/)
+- [Good bye Electron, Hello Desktop PWAs](https://medium.com/dailyjs/goodbye-electron-hello-desktop-pwas-f316b8f39882)
