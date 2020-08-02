@@ -10,11 +10,13 @@
     <div class="card-body">
         <div class="md-form">
             <p>Id</p>
-            <input mdbInputDirective type="text" id="idTarea" class="form-control" value="{{tarea.id}}" readonly>
+            <input mdbInputDirective type="text" data-testid="idTarea" class="form-control" value="{{tarea.id}}"
+                readonly>
         </div>
         <div class="md-form">
             <p>Descripción</p>
-            <input type="text" class="form-control" id="descripcionTarea" [(ngModel)]="descripcionTarea" aria-describedby="sizing-addon2">
+            <input type="text" class="form-control" data-testid="descripcionTarea" [(ngModel)]="descripcionTarea"
+                aria-describedby="sizing-addon2">
         </div>
         <br>
         <a class="btn btn-primary waves-light" mdbWavesEffect (click)="aceptar()">Aceptar</a>

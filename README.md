@@ -135,11 +135,11 @@ La lista de tareas se mapea directamente contra la propiedad tareas del service.
 
 ```typescript
 export class ListaTareasComponent implements OnInit {
-  descripcionTarea : string = ""
-  tareas : Array<Tarea>
-  tareaSeleccionada : Tarea
-  
-  constructor(private tareaService : TareaService) {
+  descripcionTarea = ''
+  tareas: Tarea[]
+  tareaSeleccionada: Tarea
+
+  constructor(private tareaService: TareaService) {
     this.tareas = this.tareaService.tareas
   }
 
@@ -173,7 +173,7 @@ export class TareaService {
   tareas: Array<Tarea>
 
   constructor() {
-    this.tareasIds = 0
+    this.tareasIds = 1
     this.tareas = []
   }
 
@@ -325,6 +325,8 @@ Para facilitar el test, modificamos la vista para que el id de la segunda column
 
 Esto permite buscar en el HTML resultante un tag cuyo id sea "desc0".
 
+> Si bien normalmente estamos prefiriendo utilizar `data-testid` como identificador de un elemento HTML para los tests, Angular no permite que definamos valores dinámicos (los reemplaza el motor de Angular en el render de la página). Esto no ocurre con el atributo `id` que es importante para el navegador, es una alternativa posible para no hacer búsquedas atadas a un `td` o `span`.
+
 ## Editar Tarea
 
 Este test necesita simular la edición de una tarea. Como nuestro service no tiene ninguna tarea en su colección, creamos un StubTareaService que genera dos tareas.
@@ -468,10 +470,10 @@ e inyectamos las rutas y los componentes de la misma manera (el lector puede ver
 El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService:
 
 ```typescript
-  it('should show task description for id 1', () => {
+  it('should show task description for id 2', () => {
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
-      expect(compiled.querySelector('#descripcionTarea').value).toContain('Aprender Routing de Angular')
+      expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
     })
   })
 ```

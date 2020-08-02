@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core'
+
 import { Tarea } from './tarea.domain'
 
 @Injectable({
@@ -9,7 +10,7 @@ export class TareaService {
   tareas: Tarea[]
 
   constructor() {
-    this.tareasIds = 0
+    this.tareasIds = 1
     this.tareas = []
   }
 

@@ -1,14 +1,14 @@
+import { APP_BASE_HREF } from '@angular/common'
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
-import { APP_BASE_HREF } from '@angular/common'
-import { Routes, RouterModule } from '@angular/router'
-import { ActivatedRoute, Data } from '@angular/router'
-import { AppRoutingModule, routingComponents, routes } from '../app-routing.module'
+import { ActivatedRoute, Data, RouterModule } from '@angular/router'
+
+import { routes, routingComponents } from '../app-routing.module'
+import { StubTareaService, TareaService } from '../tarea.service'
 import { EditarTareaComponent } from './editar-tarea.component'
-import { TareaService, StubTareaService } from '../tarea.service'
 
 function subscribe(fn: (value: Data) => void) {
-  fn({ id: 1 })
+  fn({ id: 2 })
 }
 
 describe('EditarTareaComponent', () => {
@@ -50,10 +50,10 @@ describe('EditarTareaComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy()
   })
-  it('should show task description for id 1', () => {
+  it('should show task description for id 2', () => {
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
-      expect(compiled.querySelector('#descripcionTarea').value).toContain('Aprender Routing de Angular')
+      expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
     })
   })
 })
