@@ -39,12 +39,17 @@ describe('ListaTareasComponent', () => {
   it('should contain no tasks initially', () => {
     expect(component.tareas.length).toEqual(0)
   })
-  it('should show a new task in tasks table', () => {
+  it('should show a new task in tasks table', (done) => {
     const testingAngularDescription = 'Testing Angular'
-    component.descripcionTarea = testingAngularDescription
-    component.agregarTarea()
-    fixture.detectChanges()
     const compiled = fixture.debugElement.nativeElement
-    expect(compiled.querySelector('#desc1').textContent).toContain(testingAngularDescription)
+    component.descripcionTarea = testingAngularDescription
+    // component.agregarTarea
+    compiled.querySelector(`[data-testid="agregarTarea"]`).click()
+    fixture.detectChanges()
+    fixture.whenStable().then(() => {
+      expect(compiled.querySelector('#desc1').textContent).toContain(testingAngularDescription)
+      done()
+    })
+
   })
 })

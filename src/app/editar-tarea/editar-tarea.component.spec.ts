@@ -50,10 +50,11 @@ describe('EditarTareaComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy()
   })
-  it('should show the description for a certain task', () => {
+  it('should show the description for a certain task', (done) => {
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
       expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
+      done()
     })
   })
 })
