@@ -125,8 +125,8 @@ Y por último, la tabla además de mostrar id y descripción de cada tarea dispa
 </tr>
 ```
 
-- las directivas especiales de Angular tienen el prefijo *, como en ngFor
-- el binding de la propiedad routerLink se hace al path "/editarTarea". Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path "listarTareas/editarTarea". Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
+- las directivas especiales de Angular tienen el prefijo *, como en `ngFor`
+- el binding de la propiedad routerLink se hace al path `/editarTarea`. Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path `listarTareas/editarTarea`. Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
 - por último con el moustache `{{ }}` se interpola el resultado del código tarea.id dentro del valor del tag a que estamos definiendo
 
 ## Componente
@@ -357,9 +357,9 @@ export class StubTareaService extends TareaService {
 
 También debemos simular que el usuario navegó para editar el segundo elemento, es decir que viene de la página principal y al hacer click sobre la segunda tarea esto disparó el siguiente link:
 
-[http://localhost:4200/editarTarea/1](http://localhost:4200/editarTarea/1)
+[http://localhost:4200/editarTarea/2](http://localhost:4200/editarTarea/2)
 
-Tenemos que _mockear_ el objeto ActivatedRoute para que cuando preguntemos qué parámetro vino nos conteste 1.
+Tenemos que _mockear_ el objeto ActivatedRoute para que cuando preguntemos qué parámetro vino nos conteste 2.
 
 ## Algo de funciones
 
@@ -367,18 +367,18 @@ Definimos una función subscribe:
 
 ```ts
 function subscribe(fn: (value: Data) => void) {
-  fn({ id: 1 })
+  fn({ id: 2 })
 }
 ```
 
 - subscribe recibe como parámetro una función, que recibe un valor y no devuelve nada (`void`)
-- lo que hace es aplicar la función que recibimos como parámetro pasándole un objeto, que tiene un atributo `id` cuyo valor es 1
+- lo que hace es aplicar la función que recibimos como parámetro pasándole un objeto, que tiene un atributo `id` cuyo valor es 2
 
 Esta definición es equivalente a hacer:
 
 ```ts
 const subscribe = (fn: (value: Data) => void) {
-  fn({ id: 1})
+  fn({ id: 2})
 }
 ```
 
@@ -470,7 +470,7 @@ e inyectamos las rutas y los componentes de la misma manera (el lector puede ver
 El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService:
 
 ```typescript
-  it('should show task description for id 2', () => {
+  it('should show the description for a certain task', () => {
     const compiled = fixture.debugElement.nativeElement
     fixture.whenStable().then(() => {
       expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
