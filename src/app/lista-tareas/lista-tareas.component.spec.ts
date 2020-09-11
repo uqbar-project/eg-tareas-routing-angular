@@ -47,7 +47,7 @@ describe('ListaTareasComponent', () => {
     compiled.querySelector(`[data-testid="agregarTarea"]`).click()
     fixture.detectChanges()
     fixture.whenStable().then(() => {
-      expect(compiled.querySelector('#desc1').textContent).toContain(testingAngularDescription)
+      expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
       done()
     })
 

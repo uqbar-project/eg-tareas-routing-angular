@@ -29,7 +29,8 @@
                     <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
                 </td>
                 <td>
-                    <a [routerLink]="['/editarTarea', tarea.id]" id="desc{{tarea.id}}">{{tarea.descripcion}}</a>
+                    <a [routerLink]="['/editarTarea', tarea.id]"
+                        [attr.data-testid]="'desc' + tarea.id">{{tarea.descripcion}}</a>
                 </td>
             </tr>
         </tbody>

@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core'
-import { TareaService } from '../tarea.service'
-import { Router } from '@angular/router'
-import { ActivatedRoute } from '@angular/router'
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+
 import { Tarea } from '../tarea.domain'
+import { TareaService } from '../tarea.service'
 
 @Component({
   selector: 'app-editar-tarea',
@@ -15,13 +15,12 @@ export class EditarTareaComponent implements OnInit {
   descripcionTarea: string
 
   constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {
-    this.route.params.subscribe(params => {
-      this.tarea = this.tareaService.getTareaById(params['id'])
+    this.route.params.subscribe((editarTareaParameters) => {
+      this.tarea = this.tareaService.getTareaById(editarTareaParameters.id)
       if (!this.tarea) {
         this.navegarAHome()
       }
     })
-
   }
 
   navegarAHome() {
