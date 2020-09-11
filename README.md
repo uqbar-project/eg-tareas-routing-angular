@@ -295,23 +295,26 @@ describe('ListaTareasComponent', () => {
 Los tests específicos que creamos son dos:
 
 - cuando la vista comienza no tenemos tareas cargadas (componente que delega la búsqueda de tareas al service)
-- cuando agregamos una nueva tarea, esa tarea se visualiza en la tabla HTML de tareas; esto implica escribir en el input el valor, presionar el botón "+" y buscar un tag td que tenga la descripción
+- cuando agregamos una nueva tarea, esa tarea se visualiza en la tabla HTML de tareas; esto implica escribir en el input el valor, presionar el botón "+" y buscar la descripción dentro de esa tabla
 
 ```typescript
   it('should contain no tasks initially', () => {
     expect(component.tareas.length).toEqual(0)
   })
-  it('when adding a new task it should appear in tasks table', () => {
+  it('should show a new task in tasks table', (done) => {
     const testingAngularDescription = 'Testing Angular'
-    component.descripcionTarea = testingAngularDescription
-    component.agregarTarea()
-    fixture.detectChanges()
     const compiled = fixture.debugElement.nativeElement
-    expect(compiled.querySelector('#desc0').textContent).toContain(testingAngularDescription)
-  })
+    component.descripcionTarea = testingAngularDescription  // asignamos la descripción
+    compiled.querySelector(`[data-testid="agregarTarea"]`).click() // simulamos el click del botón
+    fixture.detectChanges() // esperamos que se ejecuten los eventos de Angular
+    fixture.whenStable().then(() => {
+      expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
+      done()  // invocamos a la función done que recibimos como parámetro
+              // para indicar que el test finalizó correctamente
+    })
 ```
 
-Para facilitar el test, modificamos la vista para que el id de la segunda columna de cada tarea se forme con el prefijo "desc" + el identificador de la tarea:
+Para facilitar el test, modificamos la vista para que el `data-testid` de la segunda columna de cada tarea se forme con el prefijo "desc" + el identificador de la tarea:
 
 ```html
 <tr *ngFor="let tarea of tareas">
@@ -319,13 +322,12 @@ Para facilitar el test, modificamos la vista para que el id de la segunda column
         <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
     </td>
     <td>
-        <a [routerLink]="['/editarTarea', tarea.id]" id="desc{{tarea.id}}">{{tarea.descripcion}}</a>
+        <a [routerLink]="['/editarTarea', tarea.id]"
+          [attr.data-testid]="'desc' + tarea.id">{{tarea.descripcion}}</a>
     </td>
 ```
 
-Esto permite buscar en el HTML resultante un tag cuyo id sea "desc0".
-
-> Si bien normalmente estamos prefiriendo utilizar `data-testid` como identificador de un elemento HTML para los tests, Angular no permite que definamos valores dinámicos (los reemplaza el motor de Angular en el render de la página). Esto no ocurre con el atributo `id` que es importante para el navegador, es una alternativa posible para no hacer búsquedas atadas a un `td` o `span`.
+Esto permite buscar en el HTML resultante un tag cuyo `data-testid` sea "desc1".
 
 ## Editar Tarea
 
