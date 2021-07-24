@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
 
@@ -10,7 +10,7 @@ describe('ListaTareasComponent', () => {
   let component: ListaTareasComponent
   let fixture: ComponentFixture<ListaTareasComponent>
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ListaTareasComponent,

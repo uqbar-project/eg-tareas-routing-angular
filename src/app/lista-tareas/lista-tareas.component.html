@@ -24,13 +24,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let tarea of tareas">
+            <tr *ngFor="let tarea of tareas" [routerLink]="['/editarTarea', tarea.id]">
                 <td>
-                    <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
+                    {{tarea.id}}
                 </td>
-                <td>
-                    <a [routerLink]="['/editarTarea', tarea.id]"
-                        [attr.data-testid]="'desc' + tarea.id">{{tarea.descripcion}}</a>
+                <td [attr.data-testid]="'desc' + tarea.id">
+                    {{tarea.descripcion}}
                 </td>
             </tr>
         </tbody>

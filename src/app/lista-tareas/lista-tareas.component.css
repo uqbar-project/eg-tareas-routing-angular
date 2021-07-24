@@ -1,0 +1,7 @@
+div {
+  margin-left: 10px;
+}
+
+tr:hover {
+  cursor: pointer;
+}

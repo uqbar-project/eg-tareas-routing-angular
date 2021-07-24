@@ -25,10 +25,7 @@ export class TareaService {
   }
 
   getTareaById(id: number) {
-    return this.tareas.find((tarea) => {
-      // tslint:disable-next-line: triple-equals
-      return tarea.id == id
-    })
+    return this.tareas.find((tarea) => tarea.id == id)
   }
 
 }

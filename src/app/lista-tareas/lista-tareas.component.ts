@@ -5,20 +5,16 @@ import { Tarea } from '../tarea.domain'
 @Component({
   selector: 'app-lista-tareas',
   templateUrl: './lista-tareas.component.html',
-  styles: [
-    'div { margin-left: 10px; }'
-  ]
+  styleUrls: [ './lista-tareas.component.css' ]
 })
 
 export class ListaTareasComponent implements OnInit {
 
   descripcionTarea = ''
-  tareas: Tarea[]
-  tareaSeleccionada: Tarea
+  tareas: Tarea[] = []
+  tareaSeleccionada: Tarea | undefined
 
-  constructor(private tareaService: TareaService) {
-    this.tareas = this.tareaService.tareas
-  }
+  constructor(private tareaService: TareaService) {}
 
   agregarTarea() {
     const tarea = this.tareaService.crearTarea(this.descripcionTarea)
@@ -26,6 +22,8 @@ export class ListaTareasComponent implements OnInit {
     this.descripcionTarea = ''
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.tareas = this.tareaService.tareas
+  }
 
 }

@@ -11,14 +11,16 @@ import { TareaService } from '../tarea.service'
 })
 export class EditarTareaComponent implements OnInit {
 
-  tarea: Tarea
-  descripcionTarea: string
+  tarea!: Tarea
+  descripcionTarea!: string
 
   constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {
     this.route.params.subscribe((editarTareaParameters) => {
-      this.tarea = this.tareaService.getTareaById(editarTareaParameters.id)
-      if (!this.tarea) {
+      const tarea = this.tareaService.getTareaById(editarTareaParameters.id)
+      if (!tarea) {
         this.navegarAHome()
+      } else {
+        this.tarea = tarea
       }
     })
   }

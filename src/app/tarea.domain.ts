@@ -1,5 +1,5 @@
 export class Tarea {
-    id: number
+    id!: number
     descripcion: string
 
     constructor(descripcion: string) {
