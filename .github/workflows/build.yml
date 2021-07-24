@@ -19,9 +19,9 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ~/.npm
-          key: $-node-$
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            $-node-
+            ${{ runner.os }}-node-
 
       - name: Node ${{ matrix.node-version }}
         uses: actions/setup-node@v1
@@ -37,4 +37,4 @@ jobs:
         uses: demyanets/angular-coverage-badges-action@v1
         with:
           coverage-summary-path: coverage/eg-tareas-routing-angular/coverage-summary.json
-          github_token: $
+          github_token: ${{ secrets.GITHUB_TOKEN }}
