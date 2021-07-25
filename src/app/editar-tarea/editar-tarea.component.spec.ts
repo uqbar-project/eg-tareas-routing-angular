@@ -27,13 +27,13 @@ let stubTareaService: TareaService
 
 describe('EditarTareaComponent of a valid task', () => {
   routerSpy = jasmine.createSpyObj('Router', ['navigate'])
-  stubTareaService = new StubTareaService()
 
   beforeEach(waitForAsync(() => {
+    stubTareaService = new StubTareaService()
     TestBed.configureTestingModule({
       declarations: defaultDeclarations(),
       imports: defaultImports(),
-      providers: stubProviders(subscribeValido),
+      providers: stubProviders(stubTareaService, subscribeValido),
     })
       .compileComponents()
   }))
@@ -91,7 +91,7 @@ describe('EditarTareaComponent of a non-existent task', () => {
     TestBed.configureTestingModule({
       declarations: defaultDeclarations(),
       imports: defaultImports(),
-      providers: stubProviders(subscribeInvalido)
+      providers: stubProviders(stubTareaService, subscribeInvalido)
     })
       .compileComponents()
   }))
@@ -123,7 +123,7 @@ function defaultImports() {
 }
 
 /* Generamos los providers para nuestros tests */
-function stubProviders(subscribe: subscribeFunction) {
+function stubProviders(stubTareaService: TareaService, subscribe: subscribeFunction) {
   return [
     { provide: APP_BASE_HREF, useValue: '/' },
     {
