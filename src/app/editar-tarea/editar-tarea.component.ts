@@ -39,7 +39,7 @@ export class EditarTareaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.descripcionTarea = this.tarea.descripcion
+    this.descripcionTarea = this.tarea?.descripcion
   }
 
 }

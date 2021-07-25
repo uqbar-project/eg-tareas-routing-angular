@@ -10,7 +10,7 @@
     <div class="card-body">
         <div class="md-form">
             <p>Id</p>
-            <input mdbInputDirective type="text" data-testid="idTarea" class="form-control" value="{{tarea.id}}"
+            <input mdbInputDirective type="text" data-testid="idTarea" class="form-control" value="{{tarea?.id}}"
                 readonly>
         </div>
         <div class="md-form">
@@ -19,8 +19,8 @@
                 aria-describedby="sizing-addon2">
         </div>
         <br>
-        <a class="btn btn-primary waves-light" mdbWavesEffect (click)="aceptar()">Aceptar</a>
-        <a class="btn btn-warning waves-light" mdbWavesEffect (click)="cancelar()">Cancelar</a>
+        <a data-testid="aceptar" class="btn btn-primary waves-light" mdbWavesEffect (click)="aceptar()">Aceptar</a>
+        <a data-testid="cancelar" class="btn btn-warning waves-light" mdbWavesEffect (click)="cancelar()">Cancelar</a>
     </div>
 
 </div>
