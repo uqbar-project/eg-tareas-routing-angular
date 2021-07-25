@@ -1,6 +1,6 @@
 # Tareas (Routing con Angular)
 
-[![Build](https://github.com/uqbar-project/eg-tareas-routing-angular/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-tareas-routing-angular/actions/workflows/build.yml) ![Coverage](./badges/eg-tareas-routing-angular/coverage.svg)
+[![Build](https://github.com/uqbar-project/eg-tareas-routing-angular/actions/workflows/build.yml/badge.svg)](https://github.com/uqbar-project/eg-tareas-routing-angular/actions/workflows/build.yml) ![Coverage](./badges/eg-tareas-routing-angular/coverage.svg?extra=1)
 
 ![video](images/demo2.gif)
 
