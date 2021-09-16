@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
 import { ListaTareasComponent } from './lista-tareas/lista-tareas.component'
 import { EditarTareaComponent } from './editar-tarea/editar-tarea.component'
