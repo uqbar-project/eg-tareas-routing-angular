@@ -4,7 +4,7 @@
     <form>
         <div class="row">
             <input [(ngModel)]="descripcionTarea" name="descripcionTarea" data-testid="descripcionTarea"
-                class="col-md-9" type="text" placeholder="Descripcion de la tarea">
+                class="col-md-9" type="text" placeholder="Descripcion de la tarea" autocomplete="off">
 
             <div class="col-md-2">
                 <button type="submit" class="btn btn-indigo" (click)="agregarTarea()" data-testid="agregarTarea">
