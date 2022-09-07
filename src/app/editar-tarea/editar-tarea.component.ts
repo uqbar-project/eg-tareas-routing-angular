@@ -14,22 +14,18 @@ export class EditarTareaComponent implements OnInit {
   tarea!: Tarea
   descripcionTarea!: string
 
-  constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {
-    this.route.params.subscribe((editarTareaParameters) => {
-      const tarea = this.tareaService.getTareaById(editarTareaParameters.id)
-      if (!tarea) {
-        this.navegarAHome()
-      } else {
-        this.tarea = tarea
-      }
-    })
-  }
+  constructor(private tareaService: TareaService, private router: Router, private route: ActivatedRoute) {}
 
   navegarAHome() {
     this.router.navigate(['/listaTareas'])
   }
 
   aceptar() {
+    this.tarea.descripcion = this.descripcionTarea
+    this.router.navigate(['/editarTarea', this.tarea.id + 1])
+  }
+
+  aceptarYSalir() {
     this.tarea.descripcion = this.descripcionTarea
     this.navegarAHome()
   }
@@ -39,7 +35,15 @@ export class EditarTareaComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.descripcionTarea = this.tarea?.descripcion
+    this.route.params.subscribe((editarTareaParameters) => {
+      const tarea = this.tareaService.getTareaById(editarTareaParameters.id)
+      if (!tarea) {
+        this.navegarAHome()
+      } else {
+        this.tarea = tarea
+        this.descripcionTarea = this.tarea?.descripcion
+      }
+    })
   }
 
 }
