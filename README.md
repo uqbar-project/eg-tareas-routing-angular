@@ -456,9 +456,11 @@ e inyectamos las rutas y los componentes de la misma manera (el lector puede ver
 
 El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService, asumiendo que en el beforeEach ya trabajamos con un fakeAsync y simulamos el paso del tiempo:
 
-```typescript
-  it('should show the description for a certain task', () => {
+```ts
+  it('should show the description for a certain task', fakeAsync(() => {
+    fixture.detectChanges()
+    flushMicrotasks()
     const compiled = fixture.debugElement.nativeElement
     expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
-  })
+  }))
 ```
