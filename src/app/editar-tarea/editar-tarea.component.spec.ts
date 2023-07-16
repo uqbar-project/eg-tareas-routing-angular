@@ -25,11 +25,11 @@ let fixture: ComponentFixture<EditarTareaComponent>
 let routerSpy: jasmine.SpyObj<Router>
 let stubTareaService: TareaService
 
-routerSpy = jasmine.createSpyObj('Router', ['navigate'])
-
 describe('EditarTareaComponent of a valid task', () => {
 
   beforeEach((async () => {
+    routerSpy = jasmine.createSpyObj('Router', ['navigate'])
+
     stubTareaService = new StubTareaService()
     TestBed.configureTestingModule({
       declarations: defaultDeclarations(),
@@ -65,12 +65,12 @@ describe('EditarTareaComponent of a valid task', () => {
     expect(stubTareaService.getTareaById(existingTaskId)?.descripcion).toBe(newValue)
   }))
 
-  it('should navigate back to home when submitted', fakeAsync(() => {
-    clickOn('aceptar')
-    shouldNavigateTo('/listaTareas')    
-  }))
   it('should navigate back to home when cancelled', fakeAsync(() => {
     clickOn('cancelar')
+    shouldNavigateTo('/listaTareas')    
+  }))
+  it('should navigate back to home when submitted', fakeAsync(() => {
+    clickOn('aceptarYSalir')
     shouldNavigateTo('/listaTareas')    
   }))
 
@@ -91,6 +91,7 @@ describe('EditarTareaComponent of a valid task', () => {
 describe('EditarTareaComponent of a non-existent task', () => {
   beforeEach((async () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate'])
+
     stubTareaService = new StubTareaService()
 
     TestBed.configureTestingModule({
