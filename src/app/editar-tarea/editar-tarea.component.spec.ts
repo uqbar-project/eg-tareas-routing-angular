@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
@@ -25,8 +25,9 @@ let fixture: ComponentFixture<EditarTareaComponent>
 let routerSpy: jasmine.SpyObj<Router>
 let stubTareaService: TareaService
 
+routerSpy = jasmine.createSpyObj('Router', ['navigate'])
+
 describe('EditarTareaComponent of a valid task', () => {
-  routerSpy = jasmine.createSpyObj('Router', ['navigate'])
 
   beforeEach((async () => {
     stubTareaService = new StubTareaService()
@@ -65,21 +66,26 @@ describe('EditarTareaComponent of a valid task', () => {
   }))
 
   it('should navigate back to home when submitted', fakeAsync(() => {
+    clickOn('aceptar')
+    shouldNavigateTo('/listaTareas')    
+  }))
+  it('should navigate back to home when cancelled', fakeAsync(() => {
+    clickOn('cancelar')
+    shouldNavigateTo('/listaTareas')    
+  }))
+
+  function clickOn(buttonDataTestId: string) {
     const compiled = fixture.debugElement.nativeElement
     compiled.querySelector('[data-testid="aceptar"]').click()
     fixture.detectChanges()
+    fixture.whenStable()
     flushMicrotasks()
+  }
+
+  function shouldNavigateTo(url: string) {
     const [route] = routerSpy.navigate.calls.first().args[0]
     expect(route).toBe('/listaTareas')
-  }))
-  it('should navigate back to home when cancelled', fakeAsync(() => {
-    const compiled = fixture.debugElement.nativeElement
-    compiled.querySelector('[data-testid="cancelar"]').click()
-    fixture.detectChanges()
-    flushMicrotasks()
-    const [route] = routerSpy.navigate.calls.first().args[0]
-    expect(route).toBe('/listaTareas')
-  }))
+  }
 
 })
 
