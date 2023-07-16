@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks, flush } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
@@ -45,7 +45,7 @@ describe('EditarTareaComponent of a valid task', () => {
     // forzamos a que se dispare el ngOnInit
     // si algún test quiere tener más control (onda: los valores antes del ngOnInit)
     // esta estrategia no nos serviría
-    flushMicrotasks()
+    tick(1000)
   }))
 
   it('should create', () => {
@@ -55,38 +55,36 @@ describe('EditarTareaComponent of a valid task', () => {
     const compiled = fixture.debugElement.nativeElement
     expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
   })
-  it('should take effect when form submitted', waitForAsync(() => {
+  it('should take effect when form submitted', fakeAsync(() => {
     const newValue = 'valorNuevo'
     const compiled = fixture.debugElement.nativeElement
     component.descripcionTarea = newValue
     compiled.querySelector('[data-testid="aceptar"]').click()
-    fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(stubTareaService.getTareaById(existingTaskId)?.descripcion).toBe(newValue)
-    })
+    flushMicrotasks()
+    expect(stubTareaService.getTareaById(existingTaskId)?.descripcion).toBe(newValue)
   }))
 
   it('should navigate back to home when submitted', fakeAsync(() => {
     const compiled = fixture.debugElement.nativeElement
     compiled.querySelector('[data-testid="aceptar"]').click()
-    fixture.whenStable().then(() => {
-      const [route] = routerSpy.navigate.calls.first().args[0]
-      expect(route).toBe('/listaTareas')
-    })
+    fixture.detectChanges()
+    flushMicrotasks()
+    const [route] = routerSpy.navigate.calls.first().args[0]
+    expect(route).toBe('/listaTareas')
   }))
   it('should navigate back to home when cancelled', fakeAsync(() => {
     const compiled = fixture.debugElement.nativeElement
     compiled.querySelector('[data-testid="cancelar"]').click()
-    fixture.whenStable().then(() => {
-      const [route] = routerSpy.navigate.calls.first().args[0]
-      expect(route).toBe('/listaTareas')
-    })
+    fixture.detectChanges()
+    flushMicrotasks()
+    const [route] = routerSpy.navigate.calls.first().args[0]
+    expect(route).toBe('/listaTareas')
   }))
 
 })
 
 describe('EditarTareaComponent of a non-existent task', () => {
-  beforeEach(waitForAsync(() => {
+  beforeEach(fakeAsync(() => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate'])
     stubTareaService = new StubTareaService()
 
@@ -96,9 +94,7 @@ describe('EditarTareaComponent of a non-existent task', () => {
       providers: stubProviders(stubTareaService, subscribeInvalido)
     })
       .compileComponents()
-  }))
 
-  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(EditarTareaComponent)
     fixture.componentInstance
     fixture.detectChanges()
