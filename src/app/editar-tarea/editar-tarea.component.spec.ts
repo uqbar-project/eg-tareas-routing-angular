@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks, flush } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
