@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
@@ -28,10 +28,7 @@ let stubTareaService: TareaService
 describe('EditarTareaComponent of a valid task', () => {
   routerSpy = jasmine.createSpyObj('Router', ['navigate'])
 
-  // IMPORTANTE: no hacer fixture.detectChanges() acá porque eso
-  // fuerza a que actúe el eventLoop y rompe los tests con
-  // fakeAsync
-  beforeEach(fakeAsync(() => {
+  beforeEach((async () => {
     stubTareaService = new StubTareaService()
     TestBed.configureTestingModule({
       declarations: defaultDeclarations(),
@@ -39,27 +36,30 @@ describe('EditarTareaComponent of a valid task', () => {
       providers: stubProviders(stubTareaService, subscribeValido),
     })
       .compileComponents()
+  }))
+
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(EditarTareaComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
-    // forzamos a que se dispare el ngOnInit
-    // si algún test quiere tener más control (onda: los valores antes del ngOnInit)
-    // esta estrategia no nos serviría
-    tick(1000)
+    flushMicrotasks()
   }))
 
   it('should create', () => {
     expect(component).toBeTruthy()
   })
-  it('should show the description for a certain task', () => {
+  it('should show the description for a certain task', fakeAsync(() => {
+    fixture.detectChanges()
+    flushMicrotasks()
     const compiled = fixture.debugElement.nativeElement
     expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
-  })
+  }))
   it('should take effect when form submitted', fakeAsync(() => {
     const newValue = 'valorNuevo'
     const compiled = fixture.debugElement.nativeElement
     component.descripcionTarea = newValue
     compiled.querySelector('[data-testid="aceptar"]').click()
+    fixture.detectChanges()
     flushMicrotasks()
     expect(stubTareaService.getTareaById(existingTaskId)?.descripcion).toBe(newValue)
   }))
@@ -84,7 +84,7 @@ describe('EditarTareaComponent of a valid task', () => {
 })
 
 describe('EditarTareaComponent of a non-existent task', () => {
-  beforeEach(fakeAsync(() => {
+  beforeEach((async () => {
     routerSpy = jasmine.createSpyObj('Router', ['navigate'])
     stubTareaService = new StubTareaService()
 
@@ -94,7 +94,9 @@ describe('EditarTareaComponent of a non-existent task', () => {
       providers: stubProviders(stubTareaService, subscribeInvalido)
     })
       .compileComponents()
+  }))
 
+  beforeEach(fakeAsync(() => {
     fixture = TestBed.createComponent(EditarTareaComponent)
     fixture.componentInstance
     fixture.detectChanges()
@@ -121,7 +123,7 @@ function defaultImports() {
 }
 
 /* Generamos los providers para nuestros tests */
-function stubProviders(tareaService: TareaService, subscribe: subscribeFunction) {
+function stubProviders(stubTareaService: TareaService, subscribe: subscribeFunction) {
   return [
     { provide: APP_BASE_HREF, useValue: '/' },
     {
@@ -132,7 +134,7 @@ function stubProviders(tareaService: TareaService, subscribe: subscribeFunction)
         }
       }
     },
-    { provide: TareaService, useValue: tareaService },
+    { provide: TareaService, useValue: stubTareaService },
     { provide: Router, useValue: routerSpy }
   ]
 }
