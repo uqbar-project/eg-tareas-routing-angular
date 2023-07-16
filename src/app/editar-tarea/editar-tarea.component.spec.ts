@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks, tick } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
@@ -76,15 +76,14 @@ describe('EditarTareaComponent of a valid task', () => {
 
   function clickOn(buttonDataTestId: string) {
     const compiled = fixture.debugElement.nativeElement
-    compiled.querySelector('[data-testid="aceptar"]').click()
+    compiled.querySelector(`[data-testid='${buttonDataTestId}']`).click()
     fixture.detectChanges()
-    fixture.whenStable()
-    flushMicrotasks()
+    tick()
   }
 
   function shouldNavigateTo(url: string) {
     const [route] = routerSpy.navigate.calls.first().args[0]
-    expect(route).toBe('/listaTareas')
+    expect(route).toBe(url)
   }
 
 })
