@@ -115,14 +115,8 @@ También el botón tiene un binding del evento click para disparar el alta de un
 Y por último, la tabla además de mostrar id y descripción de cada tarea dispara la edición mediante la propiedad _routerLink_:
 
 ```html
-<tr *ngFor="let tarea of tareas">
-    <td>
-        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
-    </td>
-    <td>
-        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.descripcion}}</a>
-    </td>
-</tr>
+<tr *ngFor="let tarea of tareas" [routerLink]="['/editarTarea', tarea.id]">
+  ...
 ```
 
 - las directivas especiales de Angular tienen el prefijo *, como en `ngFor`
@@ -136,12 +130,10 @@ La lista de tareas se mapea directamente contra la propiedad tareas del service.
 ```typescript
 export class ListaTareasComponent implements OnInit {
   descripcionTarea = ''
-  tareas: Tarea[]
-  tareaSeleccionada: Tarea
+  tareas: Tarea[] = []
+  tareaSeleccionada: Tarea | undefined
 
-  constructor(private tareaService: TareaService) {
-    this.tareas = this.tareaService.tareas
-  }
+  constructor(private tareaService: TareaService) {}
 
   agregarTarea() {
     const tarea = this.tareaService.crearTarea(this.descripcionTarea)
@@ -165,36 +157,24 @@ permite definir una variable de instancia tareaService que es privada del compon
 
 ## Servicio DAO de Tareas
 
-El service funciona como un DAO (Data Access Object), provee funcionalidades de creación, eliminación y búsqueda de tareas:
+El service funciona como un DAO (Data Access Object), provee funcionalidades de creación, eliminación y búsqueda de tareas. Un dato importante es que debemos decirle que se inyecte mediante el decorador de Angular `@Injectable`:
 
-```typescript
+```ts
+@Injectable({
+  providedIn: 'root'
+})
 export class TareaService {
-  tareasIds: number
-  tareas: Array<Tarea>
-
-  constructor() {
-    this.tareasIds = 1
-    this.tareas = []
-  }
-
-  crearTarea(description: string) {
-    const tarea = new Tarea(description)
-    tarea.id = this.tareasIds++
-    return tarea
-  }
-
-  agregarTarea(tarea: Tarea) {
-    this.tareas.push(tarea)
-  }
-
-  getTareaById(id: number) {
-    return this.tareas.find((tarea) => {
-      return tarea.id === id
-    })
-  }
-
-}
+  ...
 ```
+
+ De esa manera podemos trabajar con un constructor injection en el componente `ListaTareasComponent`:
+
+
+```ts
+constructor(private tareaService : TareaService) {
+```
+
+Es decir, Angular automáticamente crea una instancia de TareaService y lo inyecta dentro del atributo del componente.
 
 ## Objeto de dominio Tarea
 
@@ -270,7 +250,7 @@ describe('ListaTareasComponent', () => {
   let component: ListaTareasComponent
   let fixture: ComponentFixture<ListaTareasComponent>
 
-  beforeEach(async(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ListaTareasComponent,
@@ -284,47 +264,52 @@ describe('ListaTareasComponent', () => {
         { provide: APP_BASE_HREF, useValue: '/' }
       ]
     })
-    .compileComponents()
+      .compileComponents()
+    fixture = TestBed.createComponent(ListaTareasComponent)
+    component = fixture.componentInstance
+    // pedimos sincronizar modelo y vista
+    fixture.detectChanges()
+    // simulamos el paso del tiempo
+    flushMicrotasks()
   }))
 ```
 
 - para poder navegar a la pantalla principal, debemos proveer el _path_ hacia '/' que equivale a ir a la vista Lista de Tareas, esto es lo que hace la propiedad APP_BASE_HREF = '/' en la configuración providers.
 - también debemos copiar los routingComponents en nuestras _declarations_
 - y el import de las rutas definidas para el RouterModule (por eso debemos exportar la constante _routes_ desde el archivo _app-routing.module_)
+- el beforeEach se encierra en una función `fakeAsync` que nos permite simular el paso del tiempo sin frenar a los tests (como lo haría la función `waitForAsync`). ¿Por qué es ésto? Porque Angular trae binding uni o bidireccional, pero necesita disparar eventos asincrónicos (que van al _event loop_) para poder sincronizar modelo y vista. Entonces mediante `fakeAsync` podemos controlar los eventos que ocurren, tenemos para ello las funciones `tick(milisegundos)` y `flushMicrotasks`.
 
 Los tests específicos que creamos son dos:
 
 - cuando la vista comienza no tenemos tareas cargadas (componente que delega la búsqueda de tareas al service)
 - cuando agregamos una nueva tarea, esa tarea se visualiza en la tabla HTML de tareas; esto implica escribir en el input el valor, presionar el botón "+" y buscar la descripción dentro de esa tabla
 
-```typescript
+```ts
   it('should contain no tasks initially', () => {
     expect(component.tareas.length).toEqual(0)
   })
-  it('should show a new task in tasks table', (done) => {
+  it('should show a new task in tasks table', fakeAsync(() => {
     const testingAngularDescription = 'Testing Angular'
     const compiled = fixture.debugElement.nativeElement
-    component.descripcionTarea = testingAngularDescription  // asignamos la descripción
-    compiled.querySelector(`[data-testid="agregarTarea"]`).click() // simulamos el click del botón
-    fixture.detectChanges() // esperamos que se ejecuten los eventos de Angular
-    fixture.whenStable().then(() => {
-      expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
-      done()  // invocamos a la función done que recibimos como parámetro
-              // para indicar que el test finalizó correctamente
-    })
+    component.descripcionTarea = testingAngularDescription
+    // component.agregarTarea
+    compiled.querySelector(`[data-testid="agregarTarea"]`).click()
+    // Forzamos el binding de Angular
+    fixture.detectChanges()
+    // Disparamos los eventos asincrónicos
+    flushMicrotasks()
+    expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
+  }))
 ```
 
 Para facilitar el test, modificamos la vista para que el `data-testid` de la segunda columna de cada tarea se forme con el prefijo "desc" + el identificador de la tarea:
 
 ```html
-<tr *ngFor="let tarea of tareas">
+<tr *ngFor="let tarea of tareas" [routerLink]="['/editarTarea', tarea.id]">
     <td>
-        <a [routerLink]="['/editarTarea', tarea.id]">{{tarea.id}}</a>
+        {{tarea.id}}
     </td>
-    <td>
-        <a [routerLink]="['/editarTarea', tarea.id]"
-          [attr.data-testid]="'desc' + tarea.id">{{tarea.descripcion}}</a>
-    </td>
+    <td [attr.data-testid]="'desc' + tarea.id">
 ```
 
 Esto permite buscar en el HTML resultante un tag cuyo `data-testid` sea "desc1".
@@ -446,7 +431,7 @@ const durazno = {
 
 Por lo tanto nuestro código queda:
 
-```typescript
+```ts
 providers: [
   ...,
   {
@@ -469,13 +454,11 @@ Al igual que hicimos para la lista de tareas el path default de nuestra aplicaci
 
 e inyectamos las rutas y los componentes de la misma manera (el lector puede ver el archivo [editar-tarea.component.spec](./editar-tarea/editar-tarea.component.spec)).
 
-El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService:
+El test más importante es el que prueba que en el input se visualiza la descripción de la segunda tarea de nuestro StubService, asumiendo que en el beforeEach ya trabajamos con un fakeAsync y simulamos el paso del tiempo:
 
 ```typescript
   it('should show the description for a certain task', () => {
     const compiled = fixture.debugElement.nativeElement
-    fixture.whenStable().then(() => {
-      expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
-    })
+    expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
   })
 ```

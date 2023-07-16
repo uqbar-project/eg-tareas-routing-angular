@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing'
+import { waitForAsync, ComponentFixture, TestBed, fakeAsync, tick, flushMicrotasks } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { ActivatedRoute, Data, Router, RouterModule } from '@angular/router'
 
@@ -28,7 +28,10 @@ let stubTareaService: TareaService
 describe('EditarTareaComponent of a valid task', () => {
   routerSpy = jasmine.createSpyObj('Router', ['navigate'])
 
-  beforeEach(waitForAsync(() => {
+  // IMPORTANTE: no hacer fixture.detectChanges() acá porque eso
+  // fuerza a que actúe el eventLoop y rompe los tests con
+  // fakeAsync
+  beforeEach(fakeAsync(() => {
     stubTareaService = new StubTareaService()
     TestBed.configureTestingModule({
       declarations: defaultDeclarations(),
@@ -36,23 +39,22 @@ describe('EditarTareaComponent of a valid task', () => {
       providers: stubProviders(stubTareaService, subscribeValido),
     })
       .compileComponents()
-  }))
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(EditarTareaComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
-  })
+    // forzamos a que se dispare el ngOnInit
+    // si algún test quiere tener más control (onda: los valores antes del ngOnInit)
+    // esta estrategia no nos serviría
+    flushMicrotasks()
+  }))
 
   it('should create', () => {
     expect(component).toBeTruthy()
   })
-  it('should show the description for a certain task', fakeAsync(() => {
+  it('should show the description for a certain task', () => {
     const compiled = fixture.debugElement.nativeElement
-    fixture.whenStable().then(() => {
-      expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
-    })
-  }))
+    expect(compiled.querySelector('[data-testid="descripcionTarea"]').value).toContain('Aprender Routing de Angular')
+  })
   it('should take effect when form submitted', waitForAsync(() => {
     const newValue = 'valorNuevo'
     const compiled = fixture.debugElement.nativeElement
@@ -123,7 +125,7 @@ function defaultImports() {
 }
 
 /* Generamos los providers para nuestros tests */
-function stubProviders(stubTareaService: TareaService, subscribe: subscribeFunction) {
+function stubProviders(tareaService: TareaService, subscribe: subscribeFunction) {
   return [
     { provide: APP_BASE_HREF, useValue: '/' },
     {
@@ -134,7 +136,7 @@ function stubProviders(stubTareaService: TareaService, subscribe: subscribeFunct
         }
       }
     },
-    { provide: TareaService, useValue: stubTareaService },
+    { provide: TareaService, useValue: tareaService },
     { provide: Router, useValue: routerSpy }
   ]
 }
