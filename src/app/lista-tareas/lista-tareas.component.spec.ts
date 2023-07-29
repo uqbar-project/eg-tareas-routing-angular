@@ -1,5 +1,5 @@
 import { APP_BASE_HREF } from '@angular/common'
-import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing'
+import { ComponentFixture, TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing'
 import { FormsModule } from '@angular/forms'
 import { RouterModule } from '@angular/router'
 
@@ -10,7 +10,7 @@ describe('ListaTareasComponent', () => {
   let component: ListaTareasComponent
   let fixture: ComponentFixture<ListaTareasComponent>
 
-  beforeEach(waitForAsync(() => {
+  beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         ListaTareasComponent,
@@ -25,13 +25,11 @@ describe('ListaTareasComponent', () => {
       ]
     })
       .compileComponents()
-  }))
-
-  beforeEach(() => {
     fixture = TestBed.createComponent(ListaTareasComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
-  })
+    flushMicrotasks()
+  }))
 
   it('should show successfully', () => {
     expect(component).toBeTruthy()
@@ -39,17 +37,16 @@ describe('ListaTareasComponent', () => {
   it('should contain no tasks initially', () => {
     expect(component.tareas.length).toEqual(0)
   })
-  it('should show a new task in tasks table', (done) => {
+  it('should show a new task in tasks table', fakeAsync(() => {
     const testingAngularDescription = 'Testing Angular'
     const compiled = fixture.debugElement.nativeElement
     component.descripcionTarea = testingAngularDescription
     // component.agregarTarea
     compiled.querySelector(`[data-testid="agregarTarea"]`).click()
+    // Forzamos el binding
     fixture.detectChanges()
-    fixture.whenStable().then(() => {
-      expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
-      done()
-    })
-
-  })
+    // Disparamos los eventos asincrónicos
+    flushMicrotasks()
+    expect(compiled.querySelector('[data-testid="desc1"]').textContent).toContain(testingAngularDescription)
+  }))
 })

@@ -36,7 +36,7 @@ export class EditarTareaComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((editarTareaParameters) => {
-      const tarea = this.tareaService.getTareaById(editarTareaParameters.id)
+      const tarea = this.tareaService.getTareaById(editarTareaParameters['id'])
       if (!tarea) {
         this.navegarAHome()
       } else {
