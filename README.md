@@ -121,11 +121,12 @@ Y por último, la tabla además de mostrar id y descripción de cada tarea dispa
 
 - las directivas especiales de Angular tienen el prefijo *, como en `ngFor`
 - el binding de la propiedad routerLink se hace al path `/editarTarea`. Es importante aquí anteponer la barra para redirigir a partir del raíz de la aplicación, de otra manera si solo definiéramos el routerLink a "editarTarea" dentro de este componente que está asociado al path "listarTareas", estaríamos intentando ir al path `listarTareas/editarTarea`. Además de "/editarTarea" pasamos como segundo parámetro el identificador de la tarea.
-- por último con el moustache `{{ }}` se interpola el resultado del código tarea.id dentro del valor del tag a que estamos definiendo
+- evaluamos además el código typescript `tarea.id`
+- como resultado el path se forma con la concatenación de los elementos de la lista: `/editarTarea/2` por ejemplo.
 
 ## Componente
 
-La lista de tareas se mapea directamente contra la propiedad tareas del service. El alta una tarea se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app.
+La lista de tareas se mapea directamente contra la propiedad `tareas` del service. El alta una tarea se delega al service, primero creando una tarea y luego agregándola a la colección de tareas conocida por la app.
 
 ```typescript
 export class ListaTareasComponent implements OnInit {
@@ -174,7 +175,7 @@ export class TareaService {
 constructor(private tareaService : TareaService) {
 ```
 
-Es decir, Angular automáticamente crea una instancia de TareaService y lo inyecta dentro del atributo del componente.
+Es decir, Angular automáticamente crea una instancia de TareaService y lo inyecta dentro del atributo del componente. Esa instancia es un Singleton (como pasaba con los objects de Wollok o Kotlin). Para más información pueden consultar [la página de services de Angular](https://angular.io/guide/architecture-services).
 
 ## Objeto de dominio Tarea
 
